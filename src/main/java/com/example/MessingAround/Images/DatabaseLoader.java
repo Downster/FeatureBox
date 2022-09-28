@@ -1,4 +1,4 @@
-package com.example.MessingAround;
+package com.example.MessingAround.Images;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;

@@ -1,11 +1,13 @@
-package com.example.MessingAround;
+package com.example.MessingAround.Images;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Objects;
 
 @Entity
+@Table(name="Images")
 public class Image {
     private @Id @GeneratedValue Long id;
     private String description;
