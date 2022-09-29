@@ -1,4 +1,4 @@
-package com.example.MessingAround.Phrases;
+package com.example.MessingAround.utils;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,14 +1,14 @@
-package com.example.MessingAround.Phrases;
+package com.example.MessingAround.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name="Phrases")
 public class Phrase{
-    private @Id @GeneratedValue Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(columnDefinition = "serial")
+    private Long id;
     private String phrase;
 
     public Phrase(String phrase) {
