@@ -28,5 +28,10 @@ public class Phrase{
     public void setPhrase(String phrase) {
         this.phrase = phrase;
     }
+
+
+    public String toString(){
+        return "" + phrase;
+    }
 }
 

@@ -6,9 +6,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class TrieCache {
-    @Bean(name= "TrieCache")
-    public Trie TrieCache(){
+public class PhraseCache extends Trie{
+    @Bean(name= "PhraseCache")
+    public Trie PhraseCache(){
         return new Trie();
     }
 }

@@ -6,6 +6,7 @@ import com.example.MessingAround.repository.ImageRepository;
 import com.example.MessingAround.model.Phrase;
 import com.example.MessingAround.repository.PhraseRepository;
 import com.example.MessingAround.repository.WordRepository;
+import com.example.MessingAround.service.PhraseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -17,6 +18,7 @@ public class DatabaseLoader implements CommandLineRunner {
     private final PhraseRepository phraseRepository;
 
     private final WordRepository wordRepository;
+
 
     @Autowired
     public DatabaseLoader(ImageRepository imgRepository, PhraseRepository phraseRepository, WordRepository wordRepository) {
