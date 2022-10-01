@@ -1,24 +1,19 @@
 package com.example.MessingAround.utils;
 
 
-import org.springframework.cache.Cache;
-
-import java.util.Collection;
-import java.util.concurrent.Callable;
+import java.util.ArrayList;
 
 public class Trie{
     private static TrieNode root;
     private static Character endSymbol;
-    private static String name;
-
 
     public Trie(){
-        this.root = new TrieNode();
-        this.endSymbol = '*';
+        root = new TrieNode();
+        endSymbol = '*';
     }
 
     public void addWord(String word){
-        TrieNode node = this.root;
+        TrieNode node = root;
         for (int i = 0; i < word.length(); i++){
             char letter = word.charAt(i);
             if (!node.children.containsKey(letter)){
@@ -26,11 +21,11 @@ public class Trie{
             }
             node = node.children.get(letter);
         }
-        node.children.put(this.endSymbol, null);
+        node.children.put(endSymbol, null);
     }
 
     public boolean search(String word){
-        TrieNode node = this.root;
+        TrieNode node = root;
         for (int i = 0; i < word.length(); i++){
             char letter = word.charAt(i);
             if (node.children.containsKey(letter)){
@@ -39,11 +34,11 @@ public class Trie{
                 return false;
             }
         }
-        return node.children.containsKey(this.endSymbol);
+        return node.children.containsKey(endSymbol);
     }
 
     public boolean containsPrefix(String prefix){
-        TrieNode node = this.root;
+        TrieNode node = root;
         for (int i = 0; i < prefix.length(); i++){
             char letter = prefix.charAt(i);
             if(!node.children.containsKey(letter)){
@@ -54,4 +49,35 @@ public class Trie{
         return true;
     }
 
+    public TrieNode getPrefixEnd(String prefix){
+        TrieNode node = root;
+        for (int i = 0; i < prefix.length(); i++){
+            char letter = prefix.charAt(i);
+            node = node.children.get(letter);
+        }
+        return node;
+    }
+
+    public void dfs(String prefix, TrieNode node, ArrayList<String> words){
+        if (node.children.containsKey(endSymbol)){
+            words.add(prefix);
+            return;
+        }
+        for (Character c: node.children.keySet()){
+            dfs(prefix + c, node.children.get(c), words);
+        }
+    }
+
+    public String[] prefixList(String prefix){
+        ArrayList<String> result = new ArrayList<>();
+        if (this.containsPrefix(prefix)) {
+            TrieNode prefixEnd = this.getPrefixEnd(prefix);
+            if (!prefixEnd.children.containsKey(endSymbol)) {
+                dfs(prefix, prefixEnd, result);
+            } else {
+                result.add(prefix);
+            }
+        }
+        return result.toArray(new String[0]);
+    }
 }

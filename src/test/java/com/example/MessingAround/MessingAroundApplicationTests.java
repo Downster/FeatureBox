@@ -1,6 +1,6 @@
 package com.example.MessingAround;
 
-import com.example.MessingAround.config.TrieCache;
+import com.example.MessingAround.config.PhraseCache;
 import com.example.MessingAround.utils.Trie;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -8,8 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.Arrays;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 @SpringBootTest
@@ -24,13 +27,21 @@ class MessingAroundApplicationTests {
 
 	@Test
 	public void givenTrieBean_whenSearchingInApplicationContext_thenFindIt(){
-		assertNotNull(applicationContext.getBean(TrieCache.class));
+		assertNotNull(applicationContext.getBean(PhraseCache.class));
 	}
 
 	@Test
 	public void givenTrie_whenSearchingForWord_theReturnTrue(){
-		Trie trieCache = applicationContext.getBean(TrieCache.class);
-		assertTrue(trieCache.search("will this work?"));
+		Trie phraseCache = applicationContext.getBean(PhraseCache.class);
+		assertTrue(phraseCache.search("will this work?"));
+		assertTrue(phraseCache.search("will I send cannibals?"));
+	}
+
+	@Test
+	public void givenTrie_whenSearchingForPrefixes_returnAllPossibleResults(){
+		Trie phraseCache = applicationContext.getBean(PhraseCache.class);
+		String[] toTest = new String[]{"will this work?", "will I get hired?", "will we make it?", "will I send cannibals?" };
+		assertThat(toTest).hasSameElementsAs(Arrays.asList(phraseCache.prefixList("will")));
 	}
 
 }
