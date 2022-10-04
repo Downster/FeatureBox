@@ -30,11 +30,11 @@ public class DatabaseLoader implements CommandLineRunner {
 
     @Override
     public void run(String... strings) throws Exception {
-        this.imgRepository.save(new Image("The mona lisa", "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg/1200px-Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg", "dongslayer123"));
-        this.phraseRepository.save(new Phrase("will this work?"));
-        this.phraseRepository.save(new Phrase("will I get hired?"));
-        this.phraseRepository.save(new Phrase("will we make it?"));
-        this.phraseRepository.save(new Phrase("will I send cannibals?"));
-        this.wordRepository.save(new Word("dookie"));
+        this.imgRepository.save(Image.builder().name("The mona lisa").url("https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg/1200px-Mona_Lisa%2C_by_Leonardo_da_Vinci%2C_from_C2RMF_retouched.jpg").owner("dongslayer123").description("poopy").build());
+        this.phraseRepository.save(Phrase.builder().phrase("will this work?").build());
+        this.phraseRepository.save(Phrase.builder().phrase("will I get hired?").build());
+        this.phraseRepository.save(Phrase.builder().phrase("will we make it?").build());
+        this.phraseRepository.save(Phrase.builder().phrase("will I send cannibals?").build());
+        this.wordRepository.save(Word.builder().word("dookie").build());
     }
 }

@@ -1,9 +1,18 @@
 package com.example.MessingAround.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name="Phrases")
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
 public class Phrase{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -11,27 +20,5 @@ public class Phrase{
     private Long id;
     private String phrase;
 
-    public Phrase(String phrase) {
-        this.phrase = phrase;
-    }
-
-    public Phrase(){};
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getPhrase() {
-        return phrase;
-    }
-
-    public void setPhrase(String phrase) {
-        this.phrase = phrase;
-    }
-
-
-    public String toString(){
-        return "" + phrase;
-    }
 }
 
