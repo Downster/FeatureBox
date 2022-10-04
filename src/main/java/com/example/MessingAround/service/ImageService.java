@@ -23,7 +23,7 @@ public class ImageService {
         return images;
     }
 
-    public Image saveImage(String name, String description, String owner, MultipartFile file){
+    public Image saveEncodedImage(String name, String description, String owner, MultipartFile file){
 
         if (file.isEmpty()) {
             throw new IllegalStateException("Cannot upload empty file");

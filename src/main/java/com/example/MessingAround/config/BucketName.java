@@ -5,6 +5,6 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum BucketName {
-    ENCODED_IMAGE("spring-amazon-storage");
+    ENCODED_IMAGE("spring-app-storage");
     private final String bucketName;
 }
