@@ -5,6 +5,7 @@ import com.example.MessingAround.model.Image;
 
 import com.example.MessingAround.repository.ImageRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -13,8 +14,9 @@ import java.util.*;
 import static org.apache.http.entity.ContentType.*;
 
 @AllArgsConstructor
+@Service
 public class ImageService {
-    private ImageRepository imageRepository;
+    private final ImageRepository imageRepository;
     private final FileStore fileStore;
 
     public List<Image> getAllImages(){

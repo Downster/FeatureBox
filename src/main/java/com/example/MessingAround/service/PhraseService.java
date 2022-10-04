@@ -19,6 +19,4 @@ public class PhraseService {
         phraseRepository.findAll().forEach(phrases::add);
         return phrases;
     }
-
-
 }
