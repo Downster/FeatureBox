@@ -20,10 +20,5 @@ public class PhraseService {
         return phrases;
     }
 
-    public  Phrase getPhrase(Long id){
-        return phraseRepository.findById(id).orElse(null);
-    }
-
-
 
 }

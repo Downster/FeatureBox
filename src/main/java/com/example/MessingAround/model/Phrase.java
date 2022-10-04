@@ -20,5 +20,9 @@ public class Phrase{
     private Long id;
     private String phrase;
 
+    public String toPhraseString(){
+        return this.phrase;
+    }
+
 }
 

@@ -24,6 +24,6 @@ public class CacheLoader implements CommandLineRunner {
     public void run(String... args) throws Exception {
         List<Phrase> phrases = phraseService.getAllPhrases();
         Trie phraseCache = context.getBean(PhraseCache.class);
-        phrases.forEach(phrase -> phraseCache.addWord(phrase.toString()));
+        phrases.forEach(phrase -> phraseCache.addWord(phrase.toPhraseString()));
     }
 }
