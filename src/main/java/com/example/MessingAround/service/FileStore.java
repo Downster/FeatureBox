@@ -2,9 +2,7 @@ package com.example.MessingAround.service;
 
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.S3Object;
-import com.amazonaws.services.s3.model.S3ObjectInputStream;
+import com.amazonaws.services.s3.model.*;
 import com.amazonaws.util.IOUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,11 +24,21 @@ public class FileStore {
         ObjectMetadata objectMetadata = new ObjectMetadata();
         optionalMetaData.ifPresent(map -> {
             if (!map.isEmpty()) {
-                map.forEach(objectMetadata::addUserMetadata);
+                for (Map.Entry<String,String> entry : map.entrySet()){
+                    if (entry.getKey() == "Content-Type"){
+                        objectMetadata.setContentType(entry.getValue());
+                    } else if (entry.getKey() == "Content-Length"){
+                        objectMetadata.setContentLength(Long.parseLong(entry.getValue()));
+                    }
+                }
             }
         });
         try {
-            amazonS3.putObject(path, fileName, inputStream, objectMetadata);
+            amazonS3.putObject( new PutObjectRequest(path, fileName, inputStream, objectMetadata)
+                    .withCannedAcl(CannedAccessControlList.PublicRead)
+                    .withStorageClass(StorageClass.Standard)
+                    .withMetadata(objectMetadata)
+            );
         } catch (AmazonServiceException e) {
             throw new IllegalStateException("Failed to upload the file", e);
         }

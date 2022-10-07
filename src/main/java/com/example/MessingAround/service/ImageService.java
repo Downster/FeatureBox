@@ -7,7 +7,7 @@ import com.example.MessingAround.repository.ImageRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
+import org.springframework.beans.factory.annotation.Value;
 import java.io.IOException;
 import java.util.*;
 
@@ -16,8 +16,11 @@ import static org.apache.http.entity.ContentType.*;
 @AllArgsConstructor
 @Service
 public class ImageService {
+
     private final ImageRepository imageRepository;
     private final FileStore fileStore;
+
+    private final String endpoint = "https://spring-app-storage.s3.us-west-1.amazonaws.com";
 
     public List<Image> getAllImages(){
         List<Image> images = new ArrayList<Image>();
@@ -26,6 +29,7 @@ public class ImageService {
     }
 
     public Image saveEncodedImage(String name, String description, String owner, MultipartFile file){
+
 
         if (file.isEmpty()) {
             throw new IllegalStateException("Cannot upload empty file");
@@ -42,8 +46,10 @@ public class ImageService {
         metadata.put("Content-Type", file.getContentType());
         metadata.put("Content-Length", String.valueOf(file.getSize()));
 
-        String path = String.format("%s/%s", BucketName.ENCODED_IMAGE.getBucketName(), UUID.randomUUID());
-        String fileName = String.format("%s", file.getOriginalFilename());
+
+        String path = String.format("%s", BucketName.ENCODED_IMAGE.getBucketName());
+        String fileName = String.format("%s%s", UUID.randomUUID(), file.getOriginalFilename());
+        String fileUrl = String.format("%s/%s", endpoint, fileName);
 
         try {
             fileStore.upload(path, fileName, Optional.of(metadata), file.getInputStream());
@@ -55,7 +61,7 @@ public class ImageService {
                 .name(name)
                 .description(description)
                 .owner(owner)
-                .url(path)
+                .url(fileUrl)
                 .build();
         image = imageRepository.save(image);
         return image;
