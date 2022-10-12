@@ -3,16 +3,15 @@ package com.example.MessingAround.api;
 import com.example.MessingAround.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import org.springframework.security.core.Authentication;
 
@@ -29,6 +28,11 @@ import java.util.stream.Collectors;
 
         @Autowired
         private ApplicationContext applicationContext;
+
+        @GetMapping("/api/csrf")
+        public ResponseEntity<String> getCsrf(){
+            return new ResponseEntity<>("Csrf sent", HttpStatus.OK);
+        }
 
         @PostMapping("/api/login")
         public String token(@RequestBody User user) {

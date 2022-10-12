@@ -3,14 +3,15 @@ package com.example.MessingAround.api;
 
 import com.example.MessingAround.model.User;
 import com.example.MessingAround.repository.UserRepository;
-import com.example.MessingAround.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@CrossOrigin
 public class UserController {
 
     @Autowired
@@ -23,7 +24,8 @@ public class UserController {
     public User createUser(@RequestBody User user) {
         User newUser = User
                 .builder()
-                .name(user.getName())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
                 .email(user.getEmail())
                 .password(encoder.encode(user.getPassword()))
                 .build();
