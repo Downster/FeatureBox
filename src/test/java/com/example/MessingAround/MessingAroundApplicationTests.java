@@ -44,4 +44,9 @@ class MessingAroundApplicationTests {
 		assertThat(toTest).hasSameElementsAs(Arrays.asList(phraseCache.prefixList("will")));
 	}
 
+	@Test
+	public void givenUsersTable_whenSearchingForEmail_returnTrue(){
+
+	}
+
 }
