@@ -2,6 +2,7 @@ package com.example.MessingAround.service;
 
 import com.example.MessingAround.model.User;
 import com.example.MessingAround.repository.UserRepository;
+import com.example.MessingAround.utils.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -19,6 +20,7 @@ public class UserService implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException(username);
         }
-        return (UserDetails) user;
+        //implement custom UserDetails class
+        return new UserPrincipal(user);
     }
 }
