@@ -4,11 +4,21 @@ package com.example.MessingAround.api;
 import com.example.MessingAround.model.User;
 import com.example.MessingAround.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.oauth2.jwt.JwtClaimsSet;
+import org.springframework.security.oauth2.jwt.JwtEncoder;
+import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+import java.time.Instant;
+import java.util.HashMap;
+import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin
@@ -20,8 +30,15 @@ public class UserController {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    JwtEncoder jwtEncoder;
+
+    @Autowired
+    private ApplicationContext applicationContext;
+
     @PostMapping("/api/users")
-    public User createUser(@RequestBody User user) {
+    @ResponseBody
+    public ResponseEntity<HashMap<String,String>> createUser(@RequestBody User user) {
         User newUser = User
                 .builder()
                 .firstName(user.getFirstName())
@@ -30,6 +47,18 @@ public class UserController {
                 .password(encoder.encode(user.getPassword()))
                 .build();
 
-        return userRepository.save(newUser);
+        Instant now = Instant.now();
+        long expiry = 36000L;
+        JwtClaimsSet claims = JwtClaimsSet.builder()
+                .issuer("self")
+                .issuedAt(now)
+                .expiresAt(now.plusSeconds(expiry))
+                .subject(newUser.getEmail())
+                .build();
+
+        HashMap<String, String> response = new HashMap<>();
+        response.put("Authorization", this.jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue());
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
