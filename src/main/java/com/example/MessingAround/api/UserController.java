@@ -14,11 +14,9 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
 import java.time.Instant;
 import java.util.HashMap;
-import java.util.stream.Collectors;
+
 
 @RestController
 @CrossOrigin
@@ -33,8 +31,6 @@ public class UserController {
     @Autowired
     JwtEncoder jwtEncoder;
 
-    @Autowired
-    private ApplicationContext applicationContext;
 
     @PostMapping("/api/users")
     @ResponseBody
@@ -57,8 +53,8 @@ public class UserController {
                 .build();
 
         HashMap<String, String> response = new HashMap<>();
-        response.put("Authorization", this.jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue());
-
+        response.put("Authorization", "Bearer " + this.jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue());
+        userRepository.save(newUser);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

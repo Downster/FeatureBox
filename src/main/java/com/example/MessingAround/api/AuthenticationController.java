@@ -15,6 +15,7 @@ import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.stream.Collectors;
 
 
@@ -34,7 +35,9 @@ import java.util.stream.Collectors;
         }
 
         @PostMapping("/api/login")
-        public String token(@RequestBody User user) {
+        @ResponseBody
+        public ResponseEntity<HashMap<String,String>> token(@RequestBody User user) {
+            HashMap<String, String> response = new HashMap<>();
             AuthenticationManager manager = applicationContext.getBean(AuthenticationManager.class);
             Authentication authentication = null;
             try {
@@ -45,7 +48,6 @@ import java.util.stream.Collectors;
             if (authentication.isAuthenticated()) {
                 Instant now = Instant.now();
                 long expiry = 36000L;
-                // @formatter:off
                 String scope = authentication.getAuthorities().stream()
                         .map(GrantedAuthority::getAuthority)
                         .collect(Collectors.joining(" "));
@@ -56,10 +58,11 @@ import java.util.stream.Collectors;
                         .subject(authentication.getName())
                         .claim("scope", scope)
                         .build();
-                // @formatter:on
-                return this.encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
+                response.put("Authorization", "Bearer " + this.encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue());
+                return new ResponseEntity<>(response, HttpStatus.OK);
             } else {
-                return "Error";
+                response.put("Error", "Could not authenticate");
+                return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
             }
         }
     }

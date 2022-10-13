@@ -33,7 +33,6 @@ public class ImageController {
                                          @RequestParam("description") String description,
                                          @RequestParam("owner") String owner,
                                          @RequestParam("file") MultipartFile file) {
-        System.out.println("here");
         return new ResponseEntity<>(service.saveEncodedImage(name, description, owner, file), HttpStatus.OK);
     }
 
