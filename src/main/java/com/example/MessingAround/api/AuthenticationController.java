@@ -1,6 +1,8 @@
 package com.example.MessingAround.api;
 
 import com.example.MessingAround.model.User;
+import com.example.MessingAround.repository.UserRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
@@ -27,16 +29,17 @@ import java.util.stream.Collectors;
         JwtEncoder encoder;
 
         @Autowired
+        private UserRepository userRepository;
+
+        @Autowired
         private ApplicationContext applicationContext;
 
-        @GetMapping("/api/csrf")
-        public ResponseEntity<String> getCsrf(){
-            return new ResponseEntity<>("Csrf sent", HttpStatus.OK);
-        }
 
         @PostMapping("/api/login")
         @ResponseBody
-        public ResponseEntity<HashMap<String,String>> token(@RequestBody User user) {
+        public ResponseEntity<HashMap<String,String>> token(@RequestBody User user) throws JsonProcessingException {
+            //TODO handle JSONPROCESSINGEXCEPTION
+            //TODO make response object value interface for type safety https://www.baeldung.com/java-hashmap-different-value-types
             HashMap<String, String> response = new HashMap<>();
             AuthenticationManager manager = applicationContext.getBean(AuthenticationManager.class);
             Authentication authentication = null;
@@ -46,6 +49,7 @@ import java.util.stream.Collectors;
                 System.out.println(e);
             }
             if (authentication.isAuthenticated()) {
+                User loggedInUser = userRepository.findByEmail(user.getEmail());
                 Instant now = Instant.now();
                 long expiry = 36000L;
                 String scope = authentication.getAuthorities().stream()
@@ -59,6 +63,7 @@ import java.util.stream.Collectors;
                         .claim("scope", scope)
                         .build();
                 response.put("Authorization", "Bearer " + this.encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue());
+                response.put("User", user.toJSON());
                 return new ResponseEntity<>(response, HttpStatus.OK);
             } else {
                 response.put("Error", "Could not authenticate");

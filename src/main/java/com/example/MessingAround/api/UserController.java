@@ -40,6 +40,7 @@ public class UserController {
                 .password(encoder.encode(user.getPassword()))
                 .build();
 
+        newUser = userRepository.save(newUser);
         Instant now = Instant.now();
         long expiry = 36000L;
         JwtClaimsSet claims = JwtClaimsSet.builder()
@@ -51,7 +52,7 @@ public class UserController {
 
         HashMap<String, String> response = new HashMap<>();
         response.put("Authorization", "Bearer " + this.jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue());
-        userRepository.save(newUser);
+        response.put("User", newUser.toString());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
